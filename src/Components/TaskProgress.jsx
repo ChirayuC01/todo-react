@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 export const TaskProgress = () => {
   const tasks = useSelector((state) => state.tasks.tasks);
+  const isDark = useSelector((state) => state.theme.isDark);
   const todayTasks = tasks.filter((task) => {
     const taskDate = new Date(task.createdAt).toDateString();
     const today = new Date().toDateString();
@@ -36,7 +37,7 @@ export const TaskProgress = () => {
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            className="stroke-gray-700"
+            className={`${isDark ? "stroke-[#3F9142]" : "stroke-[#3F9142]"}`}
             strokeWidth={strokeWidth}
             fill="none"
           />
@@ -45,7 +46,7 @@ export const TaskProgress = () => {
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            className="stroke-green-500"
+            className={`${isDark ? "stroke-[#A0EDA4]" : "stroke-[#142E15]"}`}
             strokeWidth={strokeWidth}
             fill="none"
             strokeDasharray={circumference}
@@ -56,11 +57,19 @@ export const TaskProgress = () => {
       </div>
       <div className="flex justify-center gap-4 mt-4 text-sm">
         <div className="flex items-center">
-          <div className="w-3 h-3 rounded-full bg-green-700 mr-2"></div>
+          <div
+            className={`w-3 h-3 rounded-full ${
+              isDark ? "bg-[#3F9142]" : "bg-[#3F9142]"
+            } mr-2`}
+          ></div>
           <span className="">Pending</span>
         </div>
         <div className="flex items-center">
-          <div className="w-3 h-3 rounded-full bg-green-500 mr-2"></div>
+          <div
+            className={`w-3 h-3 rounded-full ${
+              isDark ? "bg-[#A0EDA4]" : "bg-[#142E15]"
+            }  mr-2`}
+          ></div>
           <span className="">Done</span>
         </div>
       </div>

@@ -80,14 +80,14 @@ export const LoginForm = () => {
             Sign In
           </button>
         </form>
-        <div className="mt-6 text-center">
+        {/* <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             Don't have an account?{" "}
             <a href="#" className="text-green-600 hover:underline font-medium">
               Sign up
             </a>
           </p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

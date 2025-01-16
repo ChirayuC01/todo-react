@@ -171,6 +171,7 @@ export const TaskList = () => {
                       onClick={(e) => {
                         e.stopPropagation();
                         dispatch(deleteTask(task.id));
+                        setSelectedTask(null);
                       }}
                     />
                   </div>
@@ -221,6 +222,7 @@ export const TaskList = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           dispatch(deleteTask(task.id));
+                          setSelectedTask(null);
                         }}
                       />
                     </div>
@@ -275,6 +277,7 @@ export const TaskList = () => {
                         onClick={(e) => {
                           e.stopPropagation();
                           dispatch(deleteTask(task.id));
+                          setSelectedTask(null);
                         }}
                       />
                     </div>
