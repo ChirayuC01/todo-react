@@ -1,163 +1,144 @@
 import React, { useState } from "react";
-import profilePic from "../assets/profile.png";
-import allTasks from "../assets/allTasks.svg";
-import today from "../assets/today.svg";
-import important from "../assets/important.svg";
-import planned from "../assets/planned.svg";
-import assignedToMe from "../assets/assignedToMe.svg";
-import addList from "../assets/addList.svg";
-import AllTasks from "./AllTasks";
-import Today from "./Today";
-import Important from "./Important";
-import Planned from "./Planned";
-import AssignedToMe from "./AssignedToMe";
+import { useSelector, useDispatch } from "react-redux";
+import { setActiveFilter } from "../redux/slices/taskSlice";
+import { TaskProgress } from "./TaskProgress";
+import { ListTodo, Calendar, Star, Clock, Users, Plus } from "lucide-react";
+import profile from "../assets/profile.png";
+import { logout } from "../redux/slices/authSlice";
 
-const Sidebar = () => {
-  const [activeComponent, setActiveComponent] = useState("AllTasks");
+export const Sidebar = () => {
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+  const activeFilter = useSelector((state) => state.tasks.activeFilter);
+  const tasks = useSelector((state) => state.tasks.tasks);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  // Components to render based on the selected menu item
-  const renderComponent = () => {
-    switch (activeComponent) {
-      case "AllTasks":
-        return <AllTasks />;
-      case "Today":
-        return <Today />;
-      case "Important":
-        return <Important />;
-      case "Planned":
-        return <Planned />;
-      case "AssignedToMe":
-        return <AssignedToMe />;
-      default:
-        return <AllTasks />;
-    }
+  const importantTasks = tasks.filter((task) => task.isImportant);
+  const todayTasks = tasks.filter((task) => {
+    const taskDate = new Date(task.createdAt).toDateString();
+    const today = new Date().toDateString();
+    return taskDate === today;
+  });
+
+  const handleFilterChange = (filter) => {
+    dispatch(setActiveFilter(filter));
+  };
+
+  const toggleDropdown = () => {
+    setDropdownOpen((prev) => !prev);
+  };
+
+  const handleLogout = () => {
+    dispatch(logout());
+    console.log("Logged out");
   };
 
   return (
-    <div className="flex">
-      <div className="min-h-screen  flex flex-col items-center p-4 w-1/6">
-        {/* Profile Section */}
-        <div className="flex flex-col items-center mb-6">
-          <img
-            src={profilePic} // Replace with actual profile picture
-            alt="Profile"
-            className="w-20 h-20 rounded-full object-cover"
-          />
-          <p className="mt-2 text-lg font-semibold">Hey, ABCD</p>
-        </div>
+    <div className="w-64 h-screen p-6 flex flex-col">
+      {/* Profile Section */}
+      <div className="relative flex flex-col items-center mb-8">
+        <img
+          src={profile}
+          alt="Profile"
+          className="w-16 h-16 rounded-full mb-2 object-cover cursor-pointer"
+          onClick={toggleDropdown}
+        />
+        <h2 className="text-lg font-medium">Hey, {user?.name}</h2>
 
-        {/* Navigation Menu */}
-        <nav className="w-full mb-6">
-          <ul className="space-y-2">
-            <li
-              className={`flex items-center gap-4 p-3 rounded-md  cursor-pointer ${
-                activeComponent === "AllTasks"
-                  ? "bg-[#357937] bg-opacity-15"
-                  : ""
-              }`}
-              onClick={() => setActiveComponent("AllTasks")}
+        {dropdownOpen && (
+          <div className="absolute top-20 bg-white shadow-lg border rounded-md w-40 text-center z-10">
+            <button
+              className="w-full px-4 py-2 text-gray-700 hover:bg-gray-100"
+              onClick={() => console.log("Navigate to My Profile")}
             >
-              <img src={allTasks} alt="All Tasks" />
-              <span className="font-medium">All Tasks</span>
-            </li>
-            <li
-              className={`flex items-center gap-4 p-3 rounded-md  cursor-pointer ${
-                activeComponent === "Today" ? "bg-[#357937] bg-opacity-15" : ""
-              }`}
-              onClick={() => setActiveComponent("Today")}
+              My Profile
+            </button>
+            <button
+              className="w-full px-4 py-2 text-gray-700 hover:bg-gray-100 border-t"
+              onClick={handleLogout}
             >
-              <img src={today} alt="Today" />
-              <span className="font-medium">Today</span>
-            </li>
-            <li
-              className={`flex items-center gap-4 p-3 rounded-md  cursor-pointer ${
-                activeComponent === "Important"
-                  ? "bg-[#357937] bg-opacity-15"
-                  : ""
-              }`}
-              onClick={() => setActiveComponent("Important")}
-            >
-              <img src={important} alt="Important" />
-              <span className="font-medium">Important</span>
-            </li>
-            <li
-              className={`flex items-center gap-4 p-3 rounded-md  cursor-pointer ${
-                activeComponent === "Planned"
-                  ? "bg-[#357937] bg-opacity-15"
-                  : ""
-              }`}
-              onClick={() => setActiveComponent("Planned")}
-            >
-              <img src={planned} alt="Planned" />
-              <span className="font-medium">Planned</span>
-            </li>
-            <li
-              className={`flex items-center gap-4 p-3 rounded-md  cursor-pointer ${
-                activeComponent === "AssignedToMe"
-                  ? "bg-[#357937] bg-opacity-15"
-                  : ""
-              }`}
-              onClick={() => setActiveComponent("AssignedToMe")}
-            >
-              <img src={assignedToMe} alt="Assigned To Me" />
-              <span className="font-medium">Assigned to me</span>
-            </li>
-          </ul>
-        </nav>
-
-        {/* Add List Button */}
-        <div className="w-full mb-6">
-          <button className="w-full flex items-center justify-center gap-2 py-3  rounded-md ">
-            <img src={addList} />
-            <span className="font-medium">Add list</span>
-          </button>
-        </div>
-
-        {/* Task Summary */}
-        {/* <div className="w-full bg-white p-4 rounded-md shadow-md">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-gray-800 font-medium">Today Tasks</h3>
-            <span className="text-gray-400 text-sm cursor-pointer">ℹ️</span>
+              Logout
+            </button>
           </div>
-          <div className="flex flex-col items-center">
-            <h1 className="text-3xl font-bold text-green-500 mb-2">11</h1>
-            <div className="relative w-24 h-24">
-              <svg className="w-full h-full" viewBox="0 0 36 36">
-                <circle
-                  className="text-gray-300"
-                  strokeWidth="3"
-                  fill="none"
-                  r="16"
-                  cx="18"
-                  cy="18"
-                />
-                <circle
-                  className="text-green-500"
-                  strokeWidth="3"
-                  strokeDasharray="75,100"
-                  strokeLinecap="round"
-                  fill="none"
-                  r="16"
-                  cx="18"
-                  cy="18"
-                />
-              </svg>
-              <span className="absolute inset-0 flex items-center justify-center text-sm text-gray-600">
-                75% Done
-              </span>
-            </div>
-          </div>
-          <div className="flex justify-between text-sm mt-4">
-            <span className="text-green-500">● Pending</span>
-            <span className="text-gray-400">● Done</span>
-          </div>
-        </div> */}
+        )}
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-6 w-5/6">{renderComponent()}</div>
+      {/* Navigation Links */}
+      <nav className="flex-1">
+        <ul className="space-y-2">
+          <li>
+            <button
+              onClick={() => handleFilterChange("all")}
+              className={`w-full flex items-center space-x-3 px-4 py-2  rounded-lg  ${
+                activeFilter === "all" ? "bg-[#357937] bg-opacity-15" : ""
+              }`}
+            >
+              <ListTodo className="h-5 w-5" />
+              <span>All Tasks</span>
+              <span className="ml-auto text-gray-400">{tasks.length}</span>
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => handleFilterChange("today")}
+              className={`w-full flex items-center space-x-3 px-4 py-2  rounded-lg  ${
+                activeFilter === "today" ? "bg-[#357937] bg-opacity-15" : ""
+              }`}
+            >
+              <Calendar className="h-5 w-5" />
+              <span>Today</span>
+              <span className="ml-auto text-gray-400">{todayTasks.length}</span>
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => handleFilterChange("important")}
+              className={`w-full flex items-center space-x-3 px-4 py-2  rounded-lg  ${
+                activeFilter === "important" ? "bg-[#357937] bg-opacity-15" : ""
+              }`}
+            >
+              <Star className="h-5 w-5" />
+              <span>Important</span>
+              <span className="ml-auto text-gray-400">
+                {importantTasks.length}
+              </span>
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => handleFilterChange("planned")}
+              className={`w-full flex items-center space-x-3 px-4 py-2  rounded-lg  ${
+                activeFilter === "planned" ? "bg-[#357937] bg-opacity-15" : ""
+              }`}
+            >
+              <Clock className="h-5 w-5" />
+              <span>Planned</span>
+            </button>
+          </li>
+          <li>
+            <button
+              onClick={() => handleFilterChange("assigned")}
+              className={`w-full flex items-center space-x-3 px-4 py-2  rounded-lg  ${
+                activeFilter === "assigned" ? "bg-[#357937] bg-opacity-15" : ""
+              }`}
+            >
+              <Users className="h-5 w-5" />
+              <span>Assigned to me</span>
+            </button>
+          </li>
+        </ul>
+
+        <button
+          onClick={() => handleFilterChange("all")}
+          className="w-full flex items-center space-x-3 px-4 py-2  rounded-lg  mt-4"
+        >
+          <Plus className="h-5 w-5" />
+          <span>Add list</span>
+        </button>
+      </nav>
+
+      {/* Task Progress */}
+      <TaskProgress />
     </div>
   );
 };
-
-export default Sidebar;
