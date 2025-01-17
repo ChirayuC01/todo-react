@@ -193,7 +193,7 @@ export const TaskList = () => {
               </div>
             ))
           ) : (
-            // Card View
+            // Grid View
             <div
               className={`grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-3`}
             >
@@ -204,7 +204,7 @@ export const TaskList = () => {
                     task.id === selectedTask ? "ring-2 ring-green-500" : ""
                   } `}
                 >
-                  <div className="flex items-center justify-between mb-2 min-h-24">
+                  <div className="flex flex-col md:flex-row items-center justify-between mb-2 min-h-24">
                     <div className="flex justify-center items-center gap-2">
                       <input
                         type="checkbox"
@@ -216,8 +216,9 @@ export const TaskList = () => {
                         className="h-5 w-5 rounded border-gray-300 text-green-600 focus:ring-green-500"
                       />
                       <h3
-                        className="text-lg font-semibold"
+                        className="text-lg font-semibold truncate max-w-[100px] md:max-w-[100px] lg:max-w-[150px]"
                         onClick={() => handleTaskClick(task.id)}
+                        title={task.title}
                       >
                         {task.title}
                       </h3>
