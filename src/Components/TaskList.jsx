@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   toggleTask,
@@ -30,9 +30,21 @@ export const TaskList = () => {
   const [title, setTitle] = useState("");
   const [priority, setPriority] = useState("medium");
   const [dueDate, setDueDate] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
 
   const isDark = useSelector((state) => state.theme.isDark);
   const isList = useSelector((state) => state.view.isList);
+  const isSidebar = useSelector((state) => state.sidebar.isSidebar);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth <= 500);
+    };
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
 
   const filteredTasks = tasks.filter((task) => {
     switch (activeFilter) {
@@ -75,6 +87,8 @@ export const TaskList = () => {
     setPriority("medium");
     setDueDate("");
   };
+
+  if (isMobile && isSidebar) return null;
 
   return (
     <div className={`relative flex-1 `}>

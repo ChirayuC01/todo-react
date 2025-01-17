@@ -34,7 +34,7 @@ export const Sidebar = () => {
   };
 
   return (
-    <div className="w-64 h-screen p-6 flex flex-col">
+    <div className="md:w-64 h-screen p-6 flex flex-col">
       {/* Profile Section */}
       <div className="relative flex flex-col items-center mb-8">
         <img

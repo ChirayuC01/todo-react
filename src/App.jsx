@@ -26,9 +26,9 @@ function App() {
       }`}
     >
       <Header />
-      <div className={`min-h-screen  flex`}>
+      <div className={`min-h-screen  md:flex`}>
         {isSidebar && (
-          <div className="hidden md:block">
+          <div className="">
             <Sidebar />
           </div>
         )}
